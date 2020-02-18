@@ -1,0 +1,22 @@
+{
+  "name": "run-github-release",
+  "version": "1.0.0",
+  "description": "Run any GitHub release binary",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build": "ncc build --minify index.js",
+    "precommit": "ncc build --minify index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.1.1",
+    "@actions/exec": "^1.0.1",
+    "@actions/github": "^2.0.1",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.20.5"
+  }
+}
