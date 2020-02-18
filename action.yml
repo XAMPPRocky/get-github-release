@@ -1,5 +1,8 @@
 name: Get GitHub Release
 description: Installs the latest binary from GitHub Releases.
+branding:
+  icon: target
+  color: black
 
 inputs:
   owner:
