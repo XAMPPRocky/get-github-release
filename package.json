@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "Run any GitHub release binary",
   "repository": "https://github.com/XAMPPRocky/get-github-release",
-  "main": "index.js",
+  "main": "lib.js",
   "scripts": {
     "start": "node index.js",
     "build": "ncc build --minify index.js",
