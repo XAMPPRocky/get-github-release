@@ -30,7 +30,6 @@ exports.getGitHubRelease = async function (owner, repo, matches, token, installP
     // Change to be in the installation directory.
     process.chdir(path.dirname(installPath))
     const octokit = new github.GitHub(token)
-    const tarFile = `${installPath}.tar.gz`
 
     // Retrieve first release that matched `regex` and download a tar archive of
     // the binary.
@@ -40,8 +39,24 @@ exports.getGitHubRelease = async function (owner, repo, matches, token, installP
       .find(asset => asset.name.match(matches))
       .browser_download_url
 
-    await writeFile(tarFile, await (await fetch(url)).buffer())
-    await exec.exec('tar', ['-xvzf', tarFile])
+    let downloadPath = installPath
+    let command = null
+
+    if (url.endsWith('tar.gz')) {
+      downloadPath += '.tar.gz'
+      command = ['tar', ['-xvzf', downloadPath]]
+    } else if (url.endsWith('7z') || url.endsWith('zip')) {
+      downloadPath += '.zip'
+      command = ['7z', ['x', downloadPath]]
+    } else {
+      core.info(`Unknown File Extension, no extraction performed.\nURL: ${url}`)
+    }
+
+    await writeFile(downloadPath, await (await fetch(url)).buffer())
+    if (command) {
+      await exec.exec(...command)
+    }
+
     core.setOutput('install_path', installPath)
     return installPath
   } catch (error) {
