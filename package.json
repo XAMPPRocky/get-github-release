@@ -1,6 +1,6 @@
 {
   "name": "get-github-release",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Run any GitHub release binary",
   "repository": "https://github.com/XAMPPRocky/get-github-release",
   "main": "index.js",
