@@ -23,12 +23,10 @@ const fetch = require('node-fetch')
  * specific asset in the release.
  * @param {string} token - A GitHub token, with `read` permissions on
  * the repository.
- * @param {string} [installPath='/tmp/${repo}'] - The path to install the binary.
+ * @param {string} [installPath='/tmp/'] - The path to install the binary.
  */
-exports.getGitHubRelease = async function (owner, repo, matches, token, installPath = `/tmp/${repo}`) {
+exports.getGitHubRelease = async function (owner, repo, matches, token, installPath = '/tmp/') {
   try {
-    // Change to be in the installation directory.
-    process.chdir(path.dirname(installPath))
     const octokit = new github.GitHub(token)
 
     // Retrieve first release that matched `regex` and download a tar archive of
@@ -43,10 +41,10 @@ exports.getGitHubRelease = async function (owner, repo, matches, token, installP
     let command = null
 
     if (url.endsWith('tar.gz')) {
-      downloadPath += '.tar.gz'
+      downloadPath += `${repo}.tar.gz`
       command = ['tar', ['-xvzf', downloadPath]]
     } else if (url.endsWith('7z') || url.endsWith('zip')) {
-      downloadPath += '.zip'
+      downloadPath += `${repo}.zip`
       command = ['7z', ['x', downloadPath]]
     } else {
       core.info(`Unknown File Extension, no extraction performed.\nURL: ${url}`)
@@ -54,7 +52,7 @@ exports.getGitHubRelease = async function (owner, repo, matches, token, installP
 
     await writeFile(downloadPath, await (await fetch(url)).buffer())
     if (command) {
-      await exec.exec(...command)
+      await exec.exec(...command, { cwd: path.dirname(installPath) })
     }
 
     core.setOutput('install_path', installPath)
