@@ -37,14 +37,16 @@ exports.getGitHubRelease = async function (owner, repo, matches, token, installP
       .find(asset => asset.name.match(matches))
       .browser_download_url
 
+    installPath += repo
+
     let downloadPath = installPath
     let command = null
 
     if (url.endsWith('tar.gz')) {
-      downloadPath += `${repo}.tar.gz`
+      downloadPath += '.tar.gz'
       command = ['tar', ['-xvzf', downloadPath]]
     } else if (url.endsWith('7z') || url.endsWith('zip')) {
-      downloadPath += `${repo}.zip`
+      downloadPath += '.zip'
       command = ['7z', ['x', downloadPath]]
     } else {
       core.info(`Unknown File Extension, no extraction performed.\nURL: ${url}`)
